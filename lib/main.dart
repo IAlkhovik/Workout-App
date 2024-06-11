@@ -1,13 +1,15 @@
+import 'package:alk_workout/login.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'functions.dart';
+//import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async{
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //FirebaseAuth.configureProviders([const EmailProviderConfiguration()]);
   runApp(const MyApp());
 }
 
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const LoginPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -73,10 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-    Map<String, Object>? testData = <String, Object>{};
+    /*Map<String, Object>? testData = <String, Object>{};
     testData.addAll({"name": "Ivan2"});
     String user = "user2";
-    Functions.uploadUserInfo(user, testData);
+    Functions.uploadUserInfo(user, testData);*/
+
   }
 
   @override
