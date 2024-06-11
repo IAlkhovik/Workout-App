@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -58,19 +59,20 @@ class _LoginPageState extends State<LoginPage> {
         email: email,
         password: password,
       );
-      print("Account Logged-In");
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('There is no account associated with this email.');
-      } else if (e.code == 'invalid-email'){
-        print('The inputted email is invalid.');
-      } else if (e.code == 'wrong-password'){
-        print('The password is incorrect.');
-      }
+        if (e.code == 'invalid-email'){
+        print('Please make sure you input a valid email.');
+      } 
     } catch (e) {
       print(e);
     }
-      }
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      print("Account Logged-In");
+    } else {
+      print("Login Failed");
+    }
+  }
 }
 
 class CreateNewAccountPage extends StatefulWidget {
@@ -127,7 +129,7 @@ class _CreateNewAccountPageState extends State<CreateNewAccountPage> {
       if (e.code == 'email-already-in-use') {
         print('The account already exists for that email.');
       } else if (e.code == 'invalid-email'){
-        print('The inputted email is invalid.');
+        print('Please make sure you input a valid email.');
       } else if (e.code == 'weak-password'){
         print('The password should be atleast 6 characters long.');
       }
