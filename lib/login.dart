@@ -35,9 +35,17 @@ class _LoginPageState extends State<LoginPage> {
                 //validator: (input) => input == null ? 'Invalid Name' : null,
               ),
               MaterialButton(onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CreateNewAccountPage(title: "")),
+                  );
+
+              },
+              child: Container(child:const Text("Create a New Account"))),
+              MaterialButton(onPressed: () {
                 loginUser(_email, _password);
               },
-              child: Container(child:const Text("Register")))
+              child: Container(child:const Text("Sign In")))
           ],
         ),
       ),
@@ -65,15 +73,15 @@ class _LoginPageState extends State<LoginPage> {
       }
 }
 
-class CreateLoginPage extends StatefulWidget {
-  const CreateLoginPage({super.key, required this.title});
+class CreateNewAccountPage extends StatefulWidget {
+  const CreateNewAccountPage({super.key, required this.title});
   final String title;
 
   @override
-  State<CreateLoginPage> createState() => _CreateLoginPageState();
+  State<CreateNewAccountPage> createState() => _CreateNewAccountPageState();
 }
 
-class _CreateLoginPageState extends State<CreateLoginPage> {
+class _CreateNewAccountPageState extends State<CreateNewAccountPage> {
   String _email = "";
   String _password = "";
 
