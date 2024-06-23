@@ -42,8 +42,11 @@ class _LoginPageState extends State<LoginPage> {
                   );
               },
               child: Container(child:const Text("Create a New Account"))), //button that sends to "create account" page
-              MaterialButton(onPressed: () {
-                loginUser(_email, _password);
+              MaterialButton(onPressed: () async {
+                int errorCode = await loginUser(_email, _password);
+                if (errorCode != 0){
+                  showDialog(context: context, builder: (context) {return showError(errorCode);});
+                }
               },
               child: Container(child:const Text("Sign In"))) //button that signs-in user
           ],
@@ -53,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //logs in a user or returns an error message
-  void loginUser(String email, String password) async {
+  Future<int> loginUser(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -61,17 +64,46 @@ class _LoginPageState extends State<LoginPage> {
       ); //attempts login
     } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-email'){
-        print('Please make sure you input a valid email.'); //checks if inputted email is actually an email
+        print('Please make sure you input a valid email.');
+        return 1; //checks if inputted email is actually an email
       } 
     } catch (e) {
       print(e);
+      return 3;
     }
     User? user = FirebaseAuth.instance.currentUser;
-    if(user != null){ //checks if there is a signed-in user
+    if(user != null){ //checks if there is a signed-in user (without specifying incorrect email or password - for security)
       print("Account Logged-In");
+      return 0;
     } else {
       print("Login Failed");
+      return 2;
     }
+  }
+
+  AlertDialog showError(int errorCode){
+    const String titleText = 'Error'; //title of the alert box
+    String contentText = ''; //descriptive error text of the alert box
+    if (errorCode == 1){
+      contentText = 'Please make sure you input a valid email.';
+    } else if (errorCode == 2) {
+      contentText = 'An incorrect username or password was inputted.';
+    } else {
+      contentText = "An unknown error has occured. Please check everything and try again.";
+    } //reads error code and changes error text based on what is outputted
+
+    //creats an alert with the given error message
+    return AlertDialog(
+        title: const Text(titleText),
+        content: Text(contentText),
+        actions: <Widget>[
+          TextButton(
+            child: const Text("Close",
+              style: TextStyle(color: Colors.black, fontSize: 15.0)),
+            onPressed: () {
+              Navigator.pop(context);}
+            ),
+        ]);
   }
 }
 
