@@ -45,7 +45,21 @@ class _LoginPageState extends State<LoginPage> {
               MaterialButton(onPressed: () async {
                 int errorCode = await loginUser(_email, _password);
                 if (errorCode != 0){
-                  showDialog(context: context, builder: (context) {return showError(errorCode);});
+                  showDialog(context: context, builder: (context) {return showLoginError(errorCode);});
+                } else {
+                  showDialog(context: context, builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Success"),
+                      content: const Text("You have been logged in."),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text("Continue",
+                            style: TextStyle(color: Colors.black, fontSize: 15.0)),
+                          onPressed: () {
+                            Navigator.pop(context);}
+                          ),
+                      ]);
+                  });
                 }
               },
               child: Container(child:const Text("Sign In"))) //button that signs-in user
@@ -64,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
       ); //attempts login
     } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-email'){
-        print('Please make sure you input a valid email.');
+        //print('Please make sure you input a valid email.');
         return 1; //checks if inputted email is actually an email
       } 
     } catch (e) {
@@ -73,15 +87,15 @@ class _LoginPageState extends State<LoginPage> {
     }
     User? user = FirebaseAuth.instance.currentUser;
     if(user != null){ //checks if there is a signed-in user (without specifying incorrect email or password - for security)
-      print("Account Logged-In");
+      //print("Account Logged-In");
       return 0;
     } else {
-      print("Login Failed");
+      //print("Login Failed");
       return 2;
     }
   }
 
-  AlertDialog showError(int errorCode){
+  AlertDialog showLoginError(int errorCode){
     const String titleText = 'Error'; //title of the alert box
     String contentText = ''; //descriptive error text of the alert box
     if (errorCode == 1){
@@ -143,7 +157,7 @@ class _CreateNewAccountPageState extends State<CreateNewAccountPage> {
               MaterialButton(onPressed: () async {
                 int errorCode = await createUser(_email, _password); //error code for creating an account
                 if (errorCode != 0){
-                  showDialog(context: context, builder: (context) {return showError(errorCode);});
+                  showDialog(context: context, builder: (context) {return showCreationError(errorCode);});
                 } //if it fails show error alert box
               },
               child: Container(child:const Text("Register"))) //button that creates a new account
@@ -182,7 +196,7 @@ class _CreateNewAccountPageState extends State<CreateNewAccountPage> {
   }
 
   //creates an alertbox that shows a given error message
-  AlertDialog showError(int errorCode){
+  AlertDialog showCreationError(int errorCode){
     const String titleText = 'Error'; //title of the alert box
     String contentText = ''; //descriptive error text of the alert box
     if (errorCode == 1){
