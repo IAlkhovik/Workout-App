@@ -43,10 +43,10 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Container(child:const Text("Create a New Account"))), //button that sends to "create account" page
               MaterialButton(onPressed: () async {
-                int errorCode = await loginUser(_email, _password);
-                if (errorCode != 0){
+                int errorCode = await loginUser(_email, _password); //checks if there is an error while logging in
+                if (errorCode != 0){ //displays error alert
                   showDialog(context: context, builder: (context) {return showLoginError(errorCode);});
-                } else {
+                } else { //or success alert
                   showDialog(context: context, builder: (context) {
                     return AlertDialog(
                       title: const Text("Success"),
@@ -156,9 +156,23 @@ class _CreateNewAccountPageState extends State<CreateNewAccountPage> {
               ), //input field for password
               MaterialButton(onPressed: () async {
                 int errorCode = await createUser(_email, _password); //error code for creating an account
-                if (errorCode != 0){
+                if (errorCode != 0){ //if it fails show error alert box
                   showDialog(context: context, builder: (context) {return showCreationError(errorCode);});
-                } //if it fails show error alert box
+                } else { //or success box
+                  showDialog(context: context, builder: (context) {
+                    return AlertDialog(
+                      title: const Text("Success"),
+                      content: const Text("You created an account."),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text("Continue",
+                            style: TextStyle(color: Colors.black, fontSize: 15.0)),
+                          onPressed: () {
+                            Navigator.pop(context);}
+                          ),
+                      ]);
+                  });
+                }
               },
               child: Container(child:const Text("Register"))) //button that creates a new account
           ],
